@@ -8,7 +8,7 @@
     []
     (let [config (LwjglApplicationConfiguration.)]
         (doto config
-            (-> .width (set! 600))g
+            (-> .width (set! 600))
             (-> .height (set! 800))
             (-> .title (set! "Brute Pong"))
             (-> .resizable (set! false)))
