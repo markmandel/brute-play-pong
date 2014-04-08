@@ -5,8 +5,9 @@
                    [com.badlogicgames.gdx/gdx-platform "0.9.9"
                     :classifier "natives-desktop"]
                    [org.clojure/clojure "1.6.0"]
-                   [play-clj "0.2.4"]]
-
+                   [play-clj "0.2.4"]
+                   [brute "0.1.0-SNAPSHOT"]
+                   [org.clojure/math.numeric-tower "0.0.4"]]
     :source-paths ["src" "src-common"]
     :javac-options ["-target" "1.6" "-source" "1.6" "-Xlint:-options"]
     :aot [brute-play-pong.core.desktop-launcher]

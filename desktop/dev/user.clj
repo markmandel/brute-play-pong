@@ -9,9 +9,11 @@
     (:require
         [brute-play-pong.core :as core]
         [play-clj.core :as p]
-        [brute-play-pong.core.desktop-launcher :as l]))
+        [brute-play-pong.core.desktop-launcher :as l]
+        [brute.entity :as e]
+        [brute.system :as s]))
 
-(def game nil)
+(defonce game nil)
 
 (defn set-refresh-src!
     "Just set source as the refresh dirs"
@@ -29,23 +31,25 @@
         (alter-var-root #'game (constantly game)))
     :ready)
 
-(defn restart-game!
-    []
-    (when game
-        (.stop game))
-    (start!))
-
 (defn restart-screen!
     []
     (when game
         (p/on-gl (p/set-screen! core/brute-play-pong core/main-screen))
         :ok))
 
+(defn restart-game!
+    []
+    (e/reset-all!)
+    (s/reset-all!)
+    (restart-screen!))
+
+#_
 (defn reset-game!
     "Stops the system, optionally reloads modified source files, and restarts it."
     []
     (refresh :after 'user/restart-game!))
 
+#_
 (defn reset-screen!
     "Stops the system, optionally reloads modified source files, and restarts it."
     []
