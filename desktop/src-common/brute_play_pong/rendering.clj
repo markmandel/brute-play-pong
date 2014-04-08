@@ -1,5 +1,5 @@
 (ns ^{:doc "The rendering system. Keeping it simple for pong"}
-    brute-play-pong.render-system
+    brute-play-pong.rendering
     (:use [play-clj.math])
     (:require [brute.entity :as e])
     (:import [com.badlogic.gdx.graphics.glutils ShapeRenderer ShapeRenderer$ShapeType]
@@ -22,8 +22,10 @@
               geom (:rect rect)]
             (doto shape-renderer
                 (.setColor (:colour rect))
-                (.rect (rectangle! geom :get-x) (rectangle! geom :get-y) (rectangle! geom :get-width) (rectangle! geom :get-height))))
-        )
+                (.rect (rectangle! geom :get-x)
+                       (rectangle! geom :get-y)
+                       (rectangle! geom :get-width)
+                       (rectangle! geom :get-height)))))
     (.end shape-renderer))
 
 (defn process-one-game-tick

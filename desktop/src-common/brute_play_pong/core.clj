@@ -2,7 +2,8 @@
     (:use [play-clj.core]
           [play-clj.math])
     (:require [brute-play-pong.component :as c]
-              [brute-play-pong.render-system :as r]
+              [brute-play-pong.rendering :as r]
+              [brute-play-pong.input :as i]
               [brute.entity :as e]
               [brute.system :as s]
               [clojure.math.numeric-tower :as m])
@@ -47,6 +48,7 @@
     "register all the system functions"
     []
     (r/start!)
+    (s/add-system-fn i/process-one-game-tick)
     (s/add-system-fn r/process-one-game-tick))
 
 (defscreen main-screen
