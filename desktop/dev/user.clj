@@ -11,13 +11,30 @@
         [play-clj.core :as p]
         [brute-play-pong.core.desktop-launcher :as l]))
 
+(defn set-refresh-src!
+    "Just set source as the refresh dirs"
+    []
+    (set-refresh-dirs "./src" "./dev"))
+
+(defn set-refresh-all!
+    "Set src, dev and test as the directories"
+    []
+    (set-refresh-dirs "./src" "./dev" "./test"))
+
 (defn start
     []
-    (l/-main))
+    (l/-main)
+    :ready)
 
 (defn reset-screen
     []
-    (p/on-gl (p/set-screen! core/brute-play-pong core/main-screen)))
+    (p/on-gl (p/set-screen! core/brute-play-pong core/main-screen))
+    :ok)
+
+(defn reset
+    "Stops the system, optionally reloads modified source files, and restarts it."
+    []
+    (refresh :after 'user/reset-screen))
 
 ;; helper functions
 (defn autotest-focus

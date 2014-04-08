@@ -1,5 +1,5 @@
 (ns brute-play-pong.core.desktop-launcher
-    (:require [brute-play-pong.core :refer :all])
+    (:use [brute-play-pong.core])
     (:import [com.badlogic.gdx.backends.lwjgl LwjglApplication LwjglApplicationConfiguration]
              [org.lwjgl.input Keyboard])
     (:gen-class))
