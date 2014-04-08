@@ -13,6 +13,13 @@ I want to implement those as well at some stage.
 * `desktop/src-common` Cross-platform game code
 * `ios/src` iOS-specific code
 
+## Running
+
+```
+cd desktop
+lein run
+```
+
 ## Building
 
 All projects can be built using [Nightcode](https://nightcode.info/), or on the command line using [Leiningen](https://github.com/technomancy/leiningen) with the [lein-droid](https://github.com/clojure-android/lein-droid) and [lein-fruit](https://github.com/oakes/lein-fruit) plugins.
