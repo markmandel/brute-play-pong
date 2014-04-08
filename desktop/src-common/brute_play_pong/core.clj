@@ -18,19 +18,30 @@
           screen-width (graphics! :get-width)
           screen-height (graphics! :get-height)
           center-x (-> screen-width (/ 2) (m/round))
+          center-y (-> screen-height (/ 2) (m/round))
           paddle-width 100
-          paddle-center-x (- center-x (/ paddle-width 2))]
+          paddle-center-x (- center-x (/ paddle-width 2))
+          paddle-padding 40
+          ball-size 20
+          ball-center-x (- center-x (/ ball-size 2))
+          ball-center-y (- center-y (/ ball-size 2))]
 
         ;; Paddles
         (e/add-component! player (c/->Paddle))
         (e/add-component! player (c/->PlayerPaddle))
-        (e/add-component! player (c/->Rectangle (rectangle paddle-center-x 20 paddle-width 20) Color/WHITE))
+        (e/add-component! player (c/->Rectangle (rectangle paddle-center-x paddle-padding paddle-width 20) Color/WHITE))
         (println "Player is positioned at: " (e/get-component player Rectangle))
 
         (e/add-component! cpu (c/->Paddle))
         (e/add-component! cpu (c/->CPUPaddle))
-        (e/add-component! cpu (c/->Rectangle (rectangle paddle-center-x (- screen-height 40) paddle-width 20) Color/WHITE))
-        (println "CPU is positioned at: " (e/get-component cpu Rectangle))))
+        (e/add-component! cpu (c/->Rectangle (rectangle paddle-center-x (- screen-height (+ paddle-padding 20)) paddle-width 20) Color/WHITE))
+        (println "CPU is positioned at: " (e/get-component cpu Rectangle))
+
+        ;; Ball
+        (e/add-component! ball (c/->Ball))
+        (e/add-component! ball (c/->Rectangle (rectangle ball-center-x ball-center-y ball-size ball-size) Color/WHITE))
+
+        ))
 
 (defn- create-systems
     "register all the system functions"
