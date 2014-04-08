@@ -4,13 +4,18 @@
              [org.lwjgl.input Keyboard])
     (:gen-class))
 
-(defn -main
+(defn run-game
+    "Run the game and return the LWJGL instance"
     []
+    (Keyboard/enableRepeatEvents true)
     (let [config (LwjglApplicationConfiguration.)]
         (doto config
             (-> .width (set! 600))
             (-> .height (set! 800))
             (-> .title (set! "Brute Pong"))
             (-> .resizable (set! false)))
-        (LwjglApplication. brute-play-pong config))
-    (Keyboard/enableRepeatEvents true))
+        (LwjglApplication. brute-play-pong config)))
+
+(defn -main
+    []
+    (run-game))

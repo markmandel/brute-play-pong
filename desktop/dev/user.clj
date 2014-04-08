@@ -11,6 +11,8 @@
         [play-clj.core :as p]
         [brute-play-pong.core.desktop-launcher :as l]))
 
+(def game nil)
+
 (defn set-refresh-src!
     "Just set source as the refresh dirs"
     []
@@ -21,20 +23,33 @@
     []
     (set-refresh-dirs "./src" "./dev" "./test"))
 
-(defn start
+(defn start!
     []
-    (l/-main)
+    (let [game (l/run-game)]
+        (alter-var-root #'game (constantly game)))
     :ready)
 
-(defn reset-screen
+(defn restart-game!
     []
-    (p/on-gl (p/set-screen! core/brute-play-pong core/main-screen))
-    :ok)
+    (when game
+        (.stop game))
+    (start!))
 
-(defn reset
+(defn restart-screen!
+    []
+    (when game
+        (p/on-gl (p/set-screen! core/brute-play-pong core/main-screen))
+        :ok))
+
+(defn reset-game!
     "Stops the system, optionally reloads modified source files, and restarts it."
     []
-    (refresh :after 'user/reset-screen))
+    (refresh :after 'user/restart-game!))
+
+(defn reset-screen!
+    "Stops the system, optionally reloads modified source files, and restarts it."
+    []
+    (refresh :after 'user/restart-screen!))
 
 ;; helper functions
 (defn autotest-focus
