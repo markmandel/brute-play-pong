@@ -9,7 +9,7 @@
               [brute.system :as s]
               [clojure.math.numeric-tower :as m])
     (:import [com.badlogic.gdx.graphics Color]
-             [brute_play_pong.component Rectangle]))
+             [brute_play_pong.component Rectangle Velocity]))
 
 (defn- create-entities
     "Create all the initial entities with their components"
@@ -42,6 +42,8 @@
         ;; Ball
         (e/add-component! ball (c/->Ball))
         (e/add-component! ball (c/->Rectangle (rectangle ball-center-x ball-center-y ball-size ball-size) Color/WHITE))
+        (e/add-component! ball (c/->Velocity (vector-2 0 110 :set-angle (* (rand) 360))))
+        (println "Ball Velocity is: " (e/get-component ball Velocity))
 
         ))
 
