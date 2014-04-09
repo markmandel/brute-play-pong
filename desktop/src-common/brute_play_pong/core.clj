@@ -4,6 +4,7 @@
     (:require [brute-play-pong.component :as c]
               [brute-play-pong.rendering :as r]
               [brute-play-pong.input :as i]
+              [brute-play-pong.ai :as ai]
               [brute-play-pong.physics :as p]
               [brute.entity :as e]
               [brute.system :as s]
@@ -52,6 +53,7 @@
     []
     (r/start!)
     (s/add-system-fn i/process-one-game-tick)
+    (s/add-system-fn ai/process-one-game-tick)
     (s/add-system-fn p/process-one-game-tick)
     (s/add-system-fn r/process-one-game-tick))
 
