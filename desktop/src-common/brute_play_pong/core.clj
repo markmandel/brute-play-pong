@@ -42,7 +42,7 @@
         ;; Ball
         (e/add-component! ball (c/->Ball))
         (e/add-component! ball (c/->Rectangle (rectangle ball-center-x ball-center-y ball-size ball-size) Color/WHITE))
-        (e/add-component! ball (c/->Velocity (vector-2 0 110 :set-angle (* (rand) 360))))
+        (e/add-component! ball (c/->Velocity (vector-2 0 200 :set-angle (* (rand) 360))))
         (println "Ball Velocity is: " (e/get-component ball Velocity))
 
         ))
@@ -52,7 +52,7 @@
     []
     (r/start!)
     (s/add-system-fn i/process-one-game-tick)
-    (s/add-system-fn p/process-one-game-tick)=
+    (s/add-system-fn p/process-one-game-tick)
     (s/add-system-fn r/process-one-game-tick))
 
 (defscreen main-screen

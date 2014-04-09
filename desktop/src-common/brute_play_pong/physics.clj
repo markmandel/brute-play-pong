@@ -37,6 +37,11 @@
               rect-y (rectangle! rect :get-y)]
             (rectangle! rect :set-x (+ rect-x (* (.x vel) delta)))
             (rectangle! rect :set-y (+ rect-y (* (.y vel) delta)))
+
+            (when (or (touching-left-wall rect) (touching-right-wall rect))
+                (println "Touching!" rect vel)
+                (set! (.x vel) (* -1 (.x vel))))
+
             )
         ))
 
