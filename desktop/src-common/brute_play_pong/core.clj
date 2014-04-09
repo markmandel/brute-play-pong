@@ -7,6 +7,7 @@
               [brute-play-pong.ai :as ai]
               [brute-play-pong.physics :as p]
               [brute-play-pong.ball :as b]
+              [brute-play-pong.scoring :as sc]
               [brute.entity :as e]
               [brute.system :as s]
               [clojure.math.numeric-tower :as m])
@@ -38,14 +39,13 @@
         (println "CPU is positioned at: " (e/get-component cpu Rectangle))
 
         ;; Ball
-        (b/create-ball)
-
-        ))
+        (b/create-ball)))
 
 (defn- create-systems
     "register all the system functions"
     []
     (r/start!)
+    (s/add-system-fn sc/process-one-game-tick)
     (s/add-system-fn i/process-one-game-tick)
     (s/add-system-fn ai/process-one-game-tick)
     (s/add-system-fn p/process-one-game-tick)

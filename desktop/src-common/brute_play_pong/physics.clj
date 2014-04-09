@@ -23,29 +23,26 @@
         (let [rect (e/get-component entity Rectangle)
               colour (:colour rect)
               geom (:rect rect)]
-            (when (touching-left-wall geom)
-                (rectangle! geom :set-x 0))
-            (when (touching-right-wall geom)
-                (rectangle! geom :set-x (- (graphics! :get-width) (rectangle! geom :get-width)))))))
+            (cond
+                (touching-left-wall geom) (rectangle! geom :set-x 0)
+                (touching-right-wall geom) (rectangle! geom :set-x (- (graphics! :get-width) (rectangle! geom :get-width)))))))
 
 (defn- move-ball
+    "Move the ball based on it's velocity, and if it bounces into anything"
     [delta]
     (doseq [entity (e/get-all-entities-with-component Ball)]
         (let [vel (:vec (e/get-component entity Velocity))
               rect (:rect (e/get-component entity Rectangle))
               rect-x (rectangle! rect :get-x)
               rect-y (rectangle! rect :get-y)]
+
+            ;; velocity movement
             (rectangle! rect :set-x (+ rect-x (* (.x vel) delta)))
             (rectangle! rect :set-y (+ rect-y (* (.y vel) delta)))
 
+            ;; boucing off walls
             (when (or (touching-left-wall rect) (touching-right-wall rect))
-                (println "Touching!" rect vel)
-                (set! (.x vel) (* -1 (.x vel))))
-
-            )
-        ))
-
-
+                (set! (.x vel) (* -1 (.x vel)))))))
 
 (defn process-one-game-tick
     "Physics, process one game tick"
