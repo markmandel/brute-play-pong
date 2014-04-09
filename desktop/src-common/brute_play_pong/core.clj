@@ -6,6 +6,7 @@
               [brute-play-pong.input :as i]
               [brute-play-pong.ai :as ai]
               [brute-play-pong.physics :as p]
+              [brute-play-pong.ball :as b]
               [brute.entity :as e]
               [brute.system :as s]
               [clojure.math.numeric-tower :as m])
@@ -17,17 +18,13 @@
     []
     (let [player (e/create-entity!)
           cpu (e/create-entity!)
-          ball (e/create-entity!)
           screen-width (graphics! :get-width)
           screen-height (graphics! :get-height)
           center-x (-> screen-width (/ 2) (m/round))
           center-y (-> screen-height (/ 2) (m/round))
           paddle-width 100
           paddle-center-x (- center-x (/ paddle-width 2))
-          paddle-padding 40
-          ball-size 20
-          ball-center-x (- center-x (/ ball-size 2))
-          ball-center-y (- center-y (/ ball-size 2))]
+          paddle-padding 40]
 
         ;; Paddles
         (e/add-component! player (c/->Paddle))
@@ -41,10 +38,7 @@
         (println "CPU is positioned at: " (e/get-component cpu Rectangle))
 
         ;; Ball
-        (e/add-component! ball (c/->Ball))
-        (e/add-component! ball (c/->Rectangle (rectangle ball-center-x ball-center-y ball-size ball-size) Color/WHITE))
-        (e/add-component! ball (c/->Velocity (vector-2 0 200 :set-angle (* (rand) 360))))
-        (println "Ball Velocity is: " (e/get-component ball Velocity))
+        (b/create-ball)
 
         ))
 
