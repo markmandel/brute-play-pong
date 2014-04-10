@@ -30,7 +30,7 @@
 
         (e/add-component! ball (c/->Ball))
         (e/add-component! ball (c/->Rectangle (rectangle ball-center-x ball-center-y ball-size ball-size) (color :white)))
-        (e/add-component! ball (c/->Velocity (vector-2 0 200 :set-angle angle)))
+        (e/add-component! ball (c/->Velocity (vector-2 0 300 :set-angle angle)))
         (println "Ball Velocity is: " (e/get-component ball Velocity) ", angle: " angle)))
 
 (defn destroy-ball

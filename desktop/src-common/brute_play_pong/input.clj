@@ -4,7 +4,7 @@
     (:require [brute-play-pong.paddle :as p])
     (:import [brute_play_pong.component PlayerPaddle]))
 
-(def speed 150)
+(def speed 200)
 
 (defn process-one-game-tick
     "Render all the things"

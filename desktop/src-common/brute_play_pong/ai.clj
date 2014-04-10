@@ -6,7 +6,7 @@
     (:import [brute_play_pong.component CPUPaddle Ball Rectangle]
              [com.badlogic.gdx.math Vector2]))
 
-(def speed 150)
+(def speed 200)
 
 (defn process-one-game-tick
     "Render all the things"

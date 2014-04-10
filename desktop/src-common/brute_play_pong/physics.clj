@@ -2,8 +2,12 @@
     brute-play-pong.physics
     (:use [play-clj.core]
           [play-clj.math])
-    (:require [brute.entity :as e])
-    (:import [brute_play_pong.component Rectangle Ball Velocity Paddle]))
+    (:require [brute.entity :as e]
+              [clojure.math.numeric-tower :as m])
+    (:import [brute_play_pong.component Rectangle Ball Velocity Paddle]
+             [com.badlogic.gdx.math Vector2]))
+
+(def max-rotate-on-bounce 10)
 
 (defn- ^Boolean touching-left-wall
     [^com.badlogic.gdx.math.Rectangle geom]
@@ -27,11 +31,30 @@
                 (touching-left-wall geom) (rectangle! geom :set-x 0)
                 (touching-right-wall geom) (rectangle! geom :set-x (- (graphics! :get-width) (rectangle! geom :get-width)))))))
 
-(defn- ^Boolean touching-paddle
-    "Are we touching a paddle?"
+(defn- touching-paddle
+    "Are we touching a paddle? If so, return it."
     [ball-rect]
-    (some (fn [paddle] (rectangle! (:rect (e/get-component paddle Rectangle)) :overlaps ball-rect))
+    (some (fn [paddle]
+              (when (rectangle! (:rect (e/get-component paddle Rectangle)) :overlaps ball-rect)
+                  paddle))
           (e/get-all-entities-with-component Paddle)))
+
+(defn- bounce-ball
+    "Bounces the ball off the rectangle, accounting for the angle of hit"
+    [ball-rect paddle vel]
+    (let [p-rect (:rect (e/get-component paddle Rectangle))
+          center-diff (vector-2! (rectangle! ball-rect :get-center (Vector2.)) :sub (rectangle! p-rect :get-center (Vector2.)))
+          abs-x (m/abs (.x center-diff))]
+        ;; positive is right, negative is left
+        (println "diff: " center-diff, "abs:" abs-x)
+        ;;mustable data
+        (set! (.y vel) (* -1 (.y vel)))
+        ;when on the out edge, speed the ball up a bit
+        (when (> abs-x 35)
+            (println "FASTER!")
+            (vector-2! vel :scl (float 1.1)))
+        )
+    )
 
 (defn- move-ball
     "Move the ball based on it's velocity, and if it bounces into anything"
@@ -51,10 +74,8 @@
                 (set! (.x vel) (* -1 (.x vel))))
 
             ;;bouncing off paddles
-            (when (touching-paddle rect)
-                (set! (.y vel) (* -1 (.y vel))))
-
-            )))
+            (when-let [paddle (touching-paddle rect)]
+                (bounce-ball rect paddle vel)))))
 
 (defn process-one-game-tick
     "Physics, process one game tick"
