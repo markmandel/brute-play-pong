@@ -7,7 +7,7 @@
     (:import [brute_play_pong.component Rectangle Ball Velocity Paddle]
              [com.badlogic.gdx.math Vector2]))
 
-(def max-rotate-on-bounce 10)
+(def max-rotate-on-bounce 55)
 
 (defn- ^Boolean touching-left-wall
     [^com.badlogic.gdx.math.Rectangle geom]
@@ -39,20 +39,27 @@
                   paddle))
           (e/get-all-entities-with-component Paddle)))
 
+;; TODO fix glitch in which the ball gets stuck in the paddle
+
 (defn- bounce-ball
     "Bounces the ball off the rectangle, accounting for the angle of hit"
     [ball-rect paddle vel]
     (let [p-rect (:rect (e/get-component paddle Rectangle))
           center-diff (vector-2! (rectangle! ball-rect :get-center (Vector2.)) :sub (rectangle! p-rect :get-center (Vector2.)))
-          abs-x (m/abs (.x center-diff))]
+          abs-x (m/abs (.x center-diff))
+          rotation (* -1 (/ (.x center-diff) 50) max-rotate-on-bounce)]
         ;; positive is right, negative is left
         (println "diff: " center-diff, "abs:" abs-x)
-        ;;mustable data
+        ;;mutable data
         (set! (.y vel) (* -1 (.y vel)))
+        ;; rotate the velocity depending on where it is
+        (vector-2! vel :rotate rotation)
         ;when on the out edge, speed the ball up a bit
-        (when (> abs-x 35)
-            (println "FASTER!")
-            (vector-2! vel :scl (float 1.1)))
+        (cond (> abs-x 35) (do (println "FASTER!!!")
+                               (vector-2! vel :scl (float 1.1)))
+              (< abs-x 5) (do (println "SLOWER!")
+                              (vector-2! vel :scl (float 0.95)))
+              )
         )
     )
 
