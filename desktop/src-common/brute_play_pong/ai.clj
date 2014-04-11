@@ -13,9 +13,9 @@
     (let [paddles (e/get-all-entities-with-component CPUPaddle)
           ;; not very smart, always goes after the first ball
           ball (first (e/get-all-entities-with-component Ball))
-          b-center (.getCenter (:rect (e/get-component ball Rectangle)) (vector-2*))]
+          b-center (-> (e/get-component ball Rectangle) :rect (rectangle! :get-center (vector-2*)))]
         (doseq [paddle paddles]
-            (let [p-center (.getCenter (:rect (e/get-component paddle Rectangle)) (vector-2*))]
-                (if (< (.x p-center) (.x b-center))
+            (let [p-center (-> (e/get-component paddle Rectangle) :rect (rectangle! :get-center (vector-2*)))]
+                (if (< (vector-2! p-center :x) (vector-2! b-center :x))
                     (p/move-paddle speed delta CPUPaddle)
                     (p/move-paddle (* -1 speed) delta CPUPaddle))))))
