@@ -5,7 +5,7 @@
     (:require [brute.entity :as e]
               [clojure.math.numeric-tower :as m])
     (:import [brute_play_pong.component Rectangle Ball Velocity Paddle]
-             [com.badlogic.gdx.math Vector2]))
+             [com.badlogic.gdx.math Intersector]))
 
 (def max-rotate-on-bounce 55)
 
@@ -39,19 +39,58 @@
                   paddle))
           (e/get-all-entities-with-component Paddle)))
 
-;; TODO fix glitch in which the ball gets stuck in the paddle
+(defn- pos-multiplier
+    "If n1 is less than n2, return 1, otherwise return -1"
+    [n1 n2]
+    (if (< n1 n2)
+        1
+        -1))
 
 (defn- bounce-ball
+    "Bounce the ball"
+    [p-rect b-rect vel]
+
+    ; http://gamedev.stackexchange.com/questions/25642/breakout-collision-using-2d-rectangles
+
+    ; It is quite intuitive that if the ball collides with the top or bottom of the block,
+    ; this intersection's width will be greater than its height.
+
+    ; Conversely, if the ball collides with the left or right side of the block, this
+    ; intersection will have a greater height than width.
+
+    (let [intersec (rectangle*)
+          didit (intersector! :intersect-rectangles p-rect b-rect intersec)
+          width (rectangle! intersec :get-width)
+          height (rectangle! intersec :get-height)]
+
+        (println "intersec: " intersec)
+        (println "[" didit "] " "w/h: " width " / " height)
+
+        ; need to change the velocity, and also move it outside of the paddle, as it
+        ; is overlapping, which can cause all sorts of weirdness.
+
+        (if (>= width height)
+            ; mutable data
+            (do (println "TOP/BOTTOM")
+                (set! (.y vel) (* -1 (vector-2! vel :y)))
+                (let [y (rectangle! b-rect :get-y)]
+                    (rectangle! b-rect :set-y (-> (* (pos-multiplier (rectangle! p-rect :get-y) y) (rectangle! intersec :get-height)) (+ y)))))
+            (do (println "SIDE")
+                (set! (.x vel) (* -1 (vector-2! vel :x)))
+                (let [x (rectangle! b-rect :get-x)]
+                    (rectangle! b-rect :set-x (-> (* (pos-multiplier (rectangle! p-rect :get-x) x) (rectangle! intersec :get-width)) (+ x))))))
+        )
+    )
+
+(defn- ball-collision
     "Bounces the ball off the rectangle, accounting for the angle of hit"
     [ball-rect paddle vel]
     (let [p-rect (:rect (e/get-component paddle Rectangle))
-          center-diff (vector-2! (rectangle! ball-rect :get-center (Vector2.)) :sub (rectangle! p-rect :get-center (Vector2.)))
-          abs-x (m/abs (.x center-diff))
-          rotation (* -1 (/ (.x center-diff) 50) max-rotate-on-bounce)]
-        ;; positive is right, negative is left
-        (println "diff: " center-diff, "abs:" abs-x)
-        ;;mutable data
-        (set! (.y vel) (* -1 (.y vel)))
+          ;; positive is right, negative is left
+          center-diff (vector-2! (rectangle! ball-rect :get-center (vector-2*)) :sub (rectangle! p-rect :get-center (vector-2*)))
+          abs-x (m/abs (vector-2! center-diff :x))
+          rotation (* -1 (/ (vector-2! center-diff :x) 50) max-rotate-on-bounce)]
+        (bounce-ball p-rect ball-rect vel)
         ;; rotate the velocity depending on where it is
         (vector-2! vel :rotate rotation)
         ;when on the out edge, speed the ball up a bit
@@ -82,7 +121,7 @@
 
             ;;bouncing off paddles
             (when-let [paddle (touching-paddle rect)]
-                (bounce-ball rect paddle vel)))))
+                (ball-collision rect paddle vel)))))
 
 (defn process-one-game-tick
     "Physics, process one game tick"

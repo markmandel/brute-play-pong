@@ -3,8 +3,7 @@
     (:use [play-clj.math])
     (:require [brute-play-pong.paddle :as p]
               [brute.entity :as e])
-    (:import [brute_play_pong.component CPUPaddle Ball Rectangle]
-             [com.badlogic.gdx.math Vector2]))
+    (:import [brute_play_pong.component CPUPaddle Ball Rectangle]))
 
 (def speed 200)
 
@@ -14,9 +13,9 @@
     (let [paddles (e/get-all-entities-with-component CPUPaddle)
           ;; not very smart, always goes after the first ball
           ball (first (e/get-all-entities-with-component Ball))
-          b-center (.getCenter (:rect (e/get-component ball Rectangle)) (Vector2.))]
+          b-center (.getCenter (:rect (e/get-component ball Rectangle)) (vector-2*))]
         (doseq [paddle paddles]
-            (let [p-center (.getCenter (:rect (e/get-component paddle Rectangle)) (Vector2.))]
+            (let [p-center (.getCenter (:rect (e/get-component paddle Rectangle)) (vector-2*))]
                 (if (< (.x p-center) (.x b-center))
                     (p/move-paddle speed delta CPUPaddle)
                     (p/move-paddle (* -1 speed) delta CPUPaddle))))))
