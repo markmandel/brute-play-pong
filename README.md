@@ -5,6 +5,8 @@ A Pong clone written with the [brute](https://www.github.com/markmandel/brute) E
 Currently only implements the desktop version, but have kept the stubs for iOS and android in case
 I want to implement those as well at some stage.
 
+![Screenshot](screen.png)
+
 ## Contents
 
 * `android/src` Android-specific code
