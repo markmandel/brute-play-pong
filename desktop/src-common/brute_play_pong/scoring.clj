@@ -4,7 +4,7 @@
           [play-clj.math])
     (:require [brute.entity :as e]
               [brute-play-pong.ball :as b])
-    (:import [brute_play_pong.component Ball Rectangle]))
+    (:import [brute_play_pong.component Ball Rectangle Score PlayerScore CPUScore]))
 
 (def buffer -100)
 
@@ -19,14 +19,19 @@
             (> (+ y (rectangle! rect :get-height) buffer) screen-height) :player
             :else nil)))
 
+(defn- increment-score!
+    "Increment the score for whichever player scored"
+    [player-scored]
+    (let [type (if (= :player player-scored) PlayerScore CPUScore)
+          entity (first (e/get-all-entities-with-component type))]
+        (swap! (-> entity (e/get-component Score) :score) inc)))
+
 (defn process-one-game-tick
     "Physics, process one game tick"
     [delta]
     (doseq [ball (e/get-all-entities-with-component Ball)]
-        (when (ball-has-scored ball)
+        (when-let [player-scored (ball-has-scored ball)]
             (println "SCORED!!!")
+            (increment-score! player-scored)
             (b/destroy-ball)
             (b/create-ball))))
-
-
-
