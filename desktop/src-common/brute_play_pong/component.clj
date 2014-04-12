@@ -10,3 +10,6 @@
 (defrecord PlayerPaddle [])
 (defrecord CPUPaddle [])
 (defrecord Velocity [^Vector2 vec])
+(defrecord PlayerScore [])
+(defrecord CPUScore [])
+(defrecord Score [score])
