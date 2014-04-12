@@ -11,8 +11,7 @@
               [brute.entity :as e]
               [brute.system :as s]
               [clojure.math.numeric-tower :as m])
-    (:import [com.badlogic.gdx.graphics Color]
-             [brute_play_pong.component Rectangle Velocity]))
+    (:import [brute_play_pong.component Rectangle Velocity]))
 
 (defn- create-entities
     "Create all the initial entities with their components"
@@ -30,12 +29,12 @@
         ;; Paddles
         (e/add-component! player (c/->Paddle))
         (e/add-component! player (c/->PlayerPaddle))
-        (e/add-component! player (c/->Rectangle (rectangle paddle-center-x paddle-padding paddle-width 20) Color/WHITE))
+        (e/add-component! player (c/->Rectangle (rectangle paddle-center-x paddle-padding paddle-width 20) (color :white)))
         (println "Player is positioned at: " (e/get-component player Rectangle))
 
         (e/add-component! cpu (c/->Paddle))
         (e/add-component! cpu (c/->CPUPaddle))
-        (e/add-component! cpu (c/->Rectangle (rectangle paddle-center-x (- screen-height (+ paddle-padding 20)) paddle-width 20) Color/WHITE))
+        (e/add-component! cpu (c/->Rectangle (rectangle paddle-center-x (- screen-height (+ paddle-padding 20)) paddle-width 20) (color :white)))
         (println "CPU is positioned at: " (e/get-component cpu Rectangle))
 
         ;; Ball

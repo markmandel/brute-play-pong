@@ -5,7 +5,7 @@
     (:import [com.badlogic.gdx.graphics.glutils ShapeRenderer ShapeRenderer$ShapeType]
              [brute_play_pong.component Rectangle]))
 
-(defonce shape-renderer nil)
+(defonce ^ShapeRenderer shape-renderer nil)
 
 (defn start!
     "Start this system"
