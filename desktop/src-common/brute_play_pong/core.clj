@@ -24,7 +24,9 @@
           center-y (-> screen-height (/ 2) (m/round))
           paddle-width 100
           paddle-center-x (- center-x (/ paddle-width 2))
-          paddle-padding 40]
+          paddle-padding 40
+          player-score (e/create-entity!)
+          cpu-score (e/create-entity!)]
 
         ;; Paddles
         (e/add-component! player (c/->Paddle))
@@ -38,7 +40,13 @@
         (println "CPU is positioned at: " (e/get-component cpu Rectangle))
 
         ;; Ball
-        (b/create-ball)))
+        (b/create-ball)
+
+        ;; Scores
+        (e/add-component! player-score (c/->Score (atom 0)))
+        (e/add-component! player-score (c/->PlayerScore))
+        (e/add-component! cpu-score (c/->Score (atom 0)))
+        (e/add-component! cpu-score (c/->CPUScore))))
 
 (defn- create-systems
     "register all the system functions"
@@ -53,7 +61,7 @@
 (defscreen main-screen
            :on-show
            (fn [screen entities]
-               (println "Started v1")
+               (println "Started")
                (create-entities)
                (create-systems)
                (update! screen :renderer (stage) :camera (orthographic)))
