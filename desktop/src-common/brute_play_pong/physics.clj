@@ -57,7 +57,7 @@
     ; intersection will have a greater height than width.
 
     (let [intersec (rectangle*)
-          didit (intersector! :intersect-rectangles p-rect b-rect intersec)
+          _ (intersector! :intersect-rectangles p-rect b-rect intersec)
           width (rectangle! intersec :get-width)
           height (rectangle! intersec :get-height)]
 

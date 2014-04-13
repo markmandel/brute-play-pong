@@ -64,12 +64,16 @@
                (println "Started")
                (create-entities)
                (create-systems)
-               (update! screen :renderer (stage) :camera (orthographic)))
+               (update! screen :renderer (stage) :camera (orthographic))
+               ;; return nil, as we're not using the entity system
+               nil)
            :on-render
            (fn [screen entities]
                (clear!)
                (s/process-one-game-tick (graphics! :get-delta-time))
-               (render! screen)))
+               (render! screen)
+               ;; return nil, as we're not using the entity system
+               nil))
 
 (defgame brute-play-pong
          :on-create
