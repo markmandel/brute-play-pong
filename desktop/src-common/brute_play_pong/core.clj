@@ -13,40 +13,45 @@
               [clojure.math.numeric-tower :as m])
     (:import [brute_play_pong.component Rectangle Velocity]))
 
-(defn- create-entities
+(defn- start
     "Create all the initial entities with their components"
     []
-    (let [player (e/create-entity!)
-          cpu (e/create-entity!)
+    (let [player (e/create-entity)
+          cpu (e/create-entity)
           screen-width (graphics! :get-width)
           screen-height (graphics! :get-height)
           center-x (-> screen-width (/ 2) (m/round))
-          center-y (-> screen-height (/ 2) (m/round))
           paddle-width 100
           paddle-center-x (- center-x (/ paddle-width 2))
           paddle-padding 40
-          player-score (e/create-entity!)
-          cpu-score (e/create-entity!)]
+          player-score (e/create-entity)
+          cpu-score (e/create-entity)]
 
-        ;; Paddles
-        (e/add-component! player (c/->Paddle))
-        (e/add-component! player (c/->PlayerPaddle))
-        (e/add-component! player (c/->Rectangle (rectangle paddle-center-x paddle-padding paddle-width 20) (color :white)))
-        (println "Player is positioned at: " (e/get-component player Rectangle))
+        (-> (e/create-system)
+            (e/add-entity player)
+            (e/add-entity cpu)
+            (e/add-entity player-score)
+            (e/add-entity cpu-score)
 
-        (e/add-component! cpu (c/->Paddle))
-        (e/add-component! cpu (c/->CPUPaddle))
-        (e/add-component! cpu (c/->Rectangle (rectangle paddle-center-x (- screen-height (+ paddle-padding 20)) paddle-width 20) (color :white)))
-        (println "CPU is positioned at: " (e/get-component cpu Rectangle))
+            ;; Paddles
+            (e/add-component player (c/->Paddle))
+            (e/add-component player (c/->PlayerPaddle))
+            (e/add-component player (c/->Rectangle (rectangle paddle-center-x paddle-padding paddle-width 20) (color :white)))
+            (println "Player is positioned at: " (e/get-component player Rectangle))
 
-        ;; Ball
-        (b/create-ball)
+            (e/add-component cpu (c/->Paddle))
+            (e/add-component cpu (c/->CPUPaddle))
+            (e/add-component cpu (c/->Rectangle (rectangle paddle-center-x (- screen-height (+ paddle-padding 20)) paddle-width 20) (color :white)))
+            (println "CPU is positioned at: " (e/get-component cpu Rectangle))
 
-        ;; Scores
-        (e/add-component! player-score (c/->Score (atom 0)))
-        (e/add-component! player-score (c/->PlayerScore))
-        (e/add-component! cpu-score (c/->Score (atom 0)))
-        (e/add-component! cpu-score (c/->CPUScore))))
+            ;; Ball
+            (b/create-ball system)
+
+            ;; Scores
+            (e/add-component player-score (c/->Score (atom 0)))
+            (e/add-component player-score (c/->PlayerScore))
+            (e/add-component cpu-score (c/->Score (atom 0)))
+            (e/add-component cpu-score (c/->CPUScore)))))
 
 (defn- create-systems
     "register all the system functions"
@@ -62,7 +67,7 @@
            :on-show
            (fn [screen entities]
                (println "Started")
-               (create-entities)
+               (start)
                (create-systems)
                (update! screen :renderer (stage) :camera (orthographic))
                ;; return nil, as we're not using the entity system

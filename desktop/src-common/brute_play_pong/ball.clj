@@ -19,19 +19,19 @@
 
 (defn create-ball
     "Creates a ball entity"
-    []
-    (let [ball (e/create-entity!)
+    [system]
+    (let [ball (e/create-entity)
           center-x (-> (graphics! :get-width) (/ 2) (m/round))
           center-y (-> (graphics! :get-width) (/ 2) (m/round))
           ball-size 20
           ball-center-x (- center-x (/ ball-size 2))
           ball-center-y (- center-y (/ ball-size 2))
           angle (create-random-angle)]
-
-        (e/add-component! ball (c/->Ball))
-        (e/add-component! ball (c/->Rectangle (rectangle ball-center-x ball-center-y ball-size ball-size) (color :white)))
-        (e/add-component! ball (c/->Velocity (vector-2 0 300 :set-angle angle)))
-        (println "Ball Velocity is: " (e/get-component ball Velocity) ", angle: " angle)))
+        (-> system
+            (e/add-entity ball)
+            (e/add-component ball (c/->Ball))
+            (e/add-component ball (c/->Rectangle (rectangle ball-center-x ball-center-y ball-size ball-size) (color :white)))
+            (e/add-component ball (c/->Velocity (vector-2 0 300 :set-angle angle))))))
 
 (defn destroy-ball
     "Kills the ball! Oh No!"
