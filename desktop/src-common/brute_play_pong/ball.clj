@@ -35,6 +35,5 @@
 
 (defn destroy-ball
     "Kills the ball! Oh No!"
-    []
-    (doseq [ball (e/get-all-entities-with-component Ball)]
-        (e/kill-entity! ball)))
+    [system]
+    (reduce (fn [ball] (e/kill-entity system ball)) (e/get-all-entities-with-component system Ball) system))

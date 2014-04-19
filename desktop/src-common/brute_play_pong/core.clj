@@ -13,9 +13,11 @@
               [clojure.math.numeric-tower :as m])
     (:import [brute_play_pong.component Rectangle Velocity]))
 
+(def sys (atom 0))
+
 (defn- start
     "Create all the initial entities with their components"
-    []
+    [system]
     (let [player (e/create-entity)
           cpu (e/create-entity)
           screen-width (graphics! :get-width)
@@ -27,7 +29,7 @@
           player-score (e/create-entity)
           cpu-score (e/create-entity)]
 
-        (-> (e/create-system)
+        (-> system
             (e/add-entity player)
             (e/add-entity cpu)
             (e/add-entity player-score)
@@ -37,15 +39,13 @@
             (e/add-component player (c/->Paddle))
             (e/add-component player (c/->PlayerPaddle))
             (e/add-component player (c/->Rectangle (rectangle paddle-center-x paddle-padding paddle-width 20) (color :white)))
-            (println "Player is positioned at: " (e/get-component player Rectangle))
 
             (e/add-component cpu (c/->Paddle))
             (e/add-component cpu (c/->CPUPaddle))
             (e/add-component cpu (c/->Rectangle (rectangle paddle-center-x (- screen-height (+ paddle-padding 20)) paddle-width 20) (color :white)))
-            (println "CPU is positioned at: " (e/get-component cpu Rectangle))
 
             ;; Ball
-            (b/create-ball system)
+            (b/create-ball)
 
             ;; Scores
             (e/add-component player-score (c/->Score (atom 0)))
@@ -55,27 +55,30 @@
 
 (defn- create-systems
     "register all the system functions"
-    []
-    (r/start!)
-    (s/add-system-fn! sc/process-one-game-tick)
-    (s/add-system-fn! i/process-one-game-tick)
-    (s/add-system-fn! ai/process-one-game-tick)
-    (s/add-system-fn! p/process-one-game-tick)
-    (s/add-system-fn! r/process-one-game-tick))
+    [system]
+    (-> system
+        (r/start)
+        (s/add-system-fn sc/process-one-game-tick)
+        (s/add-system-fn i/process-one-game-tick)
+        (s/add-system-fn ai/process-one-game-tick)
+        (s/add-system-fn p/process-one-game-tick)
+        (s/add-system-fn r/process-one-game-tick)))
 
 (defscreen main-screen
            :on-show
            (fn [screen entities]
                (println "Started")
-               (start)
-               (create-systems)
+               (-> (e/create-system)
+                   (start)
+                   (create-systems)
+                   (as-> s (swap! sys s)))
                (update! screen :renderer (stage) :camera (orthographic))
                ;; return nil, as we're not using the entity system
                nil)
            :on-render
            (fn [screen entities]
                (clear!)
-               (s/process-one-game-tick (graphics! :get-delta-time))
+               (swap! sys (s/process-one-game-tick @sys (graphics! :get-delta-time)))
                (render! screen)
                ;; return nil, as we're not using the entity system
                nil))

@@ -39,8 +39,6 @@
 
 (defn restart-game!
     []
-    (e/reset-all!)
-    (s/reset-all!)
     (restart-screen!))
 
 #_
