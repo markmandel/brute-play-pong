@@ -20,8 +20,8 @@
     [system]
     (let [shape-renderer (:shape-renderer (:renderer system))]
         (.begin shape-renderer ShapeRenderer$ShapeType/Filled)
-        (doseq [entity (e/get-all-entities-with-component Rectangle)]
-            (let [rect (e/get-component entity Rectangle)
+        (doseq [entity (e/get-all-entities-with-component system Rectangle)]
+            (let [rect (e/get-component system entity Rectangle)
                   geom (:rect rect)]
                 (doto shape-renderer
                     (.setColor (:colour rect))
@@ -38,9 +38,9 @@
           sprite-batch (:sprite-batch renderer)
           font (:font renderer)]
         (.begin sprite-batch)
-        (doseq [entity (e/get-all-entities-with-component Score)]
-            (let [score (e/get-component entity Score)
-                  is-player (e/get-component entity PlayerScore)
+        (doseq [entity (e/get-all-entities-with-component system Score)]
+            (let [score (e/get-component system entity Score)
+                  is-player (e/get-component system entity PlayerScore)
                   screen-width (graphics! :get-width)
                   screen-height (graphics! :get-height)
                   str-score (str @(:score score))]
@@ -51,7 +51,7 @@
 
 (defn process-one-game-tick
     "Render all the things"
-    [system delta]
+    [system _]
     (render-scores system)
     (render-rectangles system)
     system)

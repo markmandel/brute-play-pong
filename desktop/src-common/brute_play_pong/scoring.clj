@@ -28,7 +28,7 @@
 
 (defn process-one-game-tick
     "Physics, process one game tick"
-    [delta]
+    [system delta]
     (doseq [ball (e/get-all-entities-with-component Ball)]
         (when-let [player-scored (ball-has-scored ball)]
             (println "SCORED!!!")

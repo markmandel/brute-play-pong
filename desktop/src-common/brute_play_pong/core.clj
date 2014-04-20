@@ -58,10 +58,10 @@
     [system]
     (-> system
         (r/start)
-        (s/add-system-fn sc/process-one-game-tick)
-        (s/add-system-fn i/process-one-game-tick)
-        (s/add-system-fn ai/process-one-game-tick)
-        (s/add-system-fn p/process-one-game-tick)
+        ;(s/add-system-fn sc/process-one-game-tick)
+        ;(s/add-system-fn i/process-one-game-tick)
+        ;(s/add-system-fn ai/process-one-game-tick)
+        ;(s/add-system-fn p/process-one-game-tick)
         (s/add-system-fn r/process-one-game-tick)))
 
 (defscreen main-screen
@@ -71,14 +71,14 @@
                (-> (e/create-system)
                    (start)
                    (create-systems)
-                   (as-> s (swap! sys s)))
+                   (as-> s (reset! sys s)))
                (update! screen :renderer (stage) :camera (orthographic))
                ;; return nil, as we're not using the entity system
                nil)
            :on-render
            (fn [screen entities]
                (clear!)
-               (swap! sys (s/process-one-game-tick @sys (graphics! :get-delta-time)))
+               (reset! sys (s/process-one-game-tick @sys (graphics! :get-delta-time)))
                (render! screen)
                ;; return nil, as we're not using the entity system
                nil))
