@@ -22,7 +22,7 @@
     [system]
     (let [ball (e/create-entity)
           center-x (-> (graphics! :get-width) (/ 2) (m/round))
-          center-y (-> (graphics! :get-width) (/ 2) (m/round))
+          center-y (-> (graphics! :get-height) (/ 2) (m/round))
           ball-size 20
           ball-center-x (- center-x (/ ball-size 2))
           ball-center-y (- center-y (/ ball-size 2))

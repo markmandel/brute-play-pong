@@ -6,9 +6,9 @@
 
 (defn move-paddle
     "move the paddle to the left or the right"
-    [speed delta paddle-type]
+    [system speed delta paddle-type]
     (let [movement (* speed delta)]
-        (doseq [paddle (e/get-all-entities-with-component paddle-type)]
-            (let [rectangle (e/get-component paddle Rectangle)
+        (doseq [paddle (e/get-all-entities-with-component system paddle-type)]
+            (let [rectangle (e/get-component system paddle Rectangle)
                   geom (:rect rectangle)]
                 (rectangle! geom :set-x (-> geom (rectangle! :get-x) (+ movement)))))))
