@@ -10,7 +10,7 @@
     "Render all the things"
     [system delta]
     (when (key-pressed? :dpad-left)
-        (p/move-paddle system (* -1 speed) delta PlayerPaddle))
+        (p/move-paddle! system (* -1 speed) delta PlayerPaddle))
     (when (key-pressed? :dpad-right)
-        (p/move-paddle system speed delta PlayerPaddle))
+        (p/move-paddle! system speed delta PlayerPaddle))
     system)

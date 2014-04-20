@@ -4,7 +4,7 @@
     (:require [brute.entity :as e])
     (:import [brute_play_pong.component Rectangle]))
 
-(defn move-paddle
+(defn move-paddle!
     "move the paddle to the left or the right"
     [system speed delta paddle-type]
     (let [movement (* speed delta)]

@@ -22,10 +22,9 @@
 
 (defn- keep-rects-in-world!
     "Make sure all rectangles stay inside the walls"
-    []
-    (doseq [entity (e/get-all-entities-with-component Rectangle)]
-        (let [rect (e/get-component entity Rectangle)
-              colour (:colour rect)
+    [system]
+    (doseq [entity (e/get-all-entities-with-component system Rectangle)]
+        (let [rect (e/get-component system entity Rectangle)
               geom (:rect rect)]
             (cond
                 (touching-left-wall geom) (rectangle! geom :set-x 0)
@@ -33,11 +32,11 @@
 
 (defn- touching-paddle
     "Are we touching a paddle? If so, return it."
-    [ball-rect]
+    [system ball-rect]
     (some (fn [paddle]
-              (when (rectangle! (:rect (e/get-component paddle Rectangle)) :overlaps ball-rect)
+              (when (rectangle! (:rect (e/get-component system paddle Rectangle)) :overlaps ball-rect)
                   paddle))
-          (e/get-all-entities-with-component Paddle)))
+          (e/get-all-entities-with-component system Paddle)))
 
 (defn- pos-multiplier
     "If n1 is less than n2, return 1, otherwise return -1"
@@ -77,8 +76,8 @@
 
 (defn- ball-collision!
     "Bounces the ball off the rectangle, accounting for the angle of hit"
-    [ball-rect paddle vel]
-    (let [p-rect (:rect (e/get-component paddle Rectangle))
+    [system ball-rect paddle vel]
+    (let [p-rect (:rect (e/get-component system paddle Rectangle))
           ;; positive is right, negative is left
           center-diff (vector-2! (rectangle! ball-rect :get-center (vector-2*)) :sub (rectangle! p-rect :get-center (vector-2*)))
           abs-x (m/abs (vector-2! center-diff :x))
@@ -94,10 +93,10 @@
 
 (defn- move-ball!
     "Move the ball based on it's velocity, and if it bounces into anything"
-    [delta]
-    (doseq [entity (e/get-all-entities-with-component Ball)]
-        (let [vel (:vec (e/get-component entity Velocity))
-              rect (:rect (e/get-component entity Rectangle))
+    [system delta]
+    (doseq [entity (e/get-all-entities-with-component system Ball)]
+        (let [vel (:vec (e/get-component system entity Velocity))
+              rect (:rect (e/get-component system entity Rectangle))
               rect-x (rectangle! rect :get-x)
               rect-y (rectangle! rect :get-y)]
 
@@ -110,11 +109,12 @@
                 (set! (.x vel) (* -1 (.x vel))))
 
             ;;bouncing off paddles
-            (when-let [paddle (touching-paddle rect)]
-                (ball-collision! rect paddle vel)))))
+            (when-let [paddle (touching-paddle system rect)]
+                (ball-collision! system rect paddle vel)))))
 
 (defn process-one-game-tick
     "Physics, process one game tick"
-    [delta]
-    (move-ball! delta)
-    (keep-rects-in-world!))
+    [system delta]
+    (move-ball! system delta)
+    (keep-rects-in-world! system)
+    system)

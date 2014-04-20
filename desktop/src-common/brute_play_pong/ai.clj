@@ -9,13 +9,14 @@
 
 (defn process-one-game-tick
     "Render all the things"
-    [delta]
-    (let [paddles (e/get-all-entities-with-component CPUPaddle)
+    [system delta]
+    (let [paddles (e/get-all-entities-with-component system CPUPaddle)
           ;; not very smart, always goes after the first ball
-          ball (first (e/get-all-entities-with-component Ball))
-          b-center (-> (e/get-component ball Rectangle) :rect (rectangle! :get-center (vector-2*)))]
+          ball (first (e/get-all-entities-with-component system Ball))
+          b-center (-> (e/get-component system ball Rectangle) :rect (rectangle! :get-center (vector-2*)))]
         (doseq [paddle paddles]
-            (let [p-center (-> (e/get-component paddle Rectangle) :rect (rectangle! :get-center (vector-2*)))]
+            (let [p-center (-> (e/get-component system paddle Rectangle) :rect (rectangle! :get-center (vector-2*)))]
                 (if (< (vector-2! p-center :x) (vector-2! b-center :x))
-                    (p/move-paddle speed delta CPUPaddle)
-                    (p/move-paddle (* -1 speed) delta CPUPaddle))))))
+                    (p/move-paddle! system speed delta CPUPaddle)
+                    (p/move-paddle! system (* -1 speed) delta CPUPaddle)))))
+    system)
