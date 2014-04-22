@@ -10,8 +10,8 @@
 
 (defn- ^Boolean ball-has-scored
     "Is the ball at a point where it has scored?"
-    [ball]
-    (let [rect (:rect (e/get-component ball Rectangle))
+    [system ball]
+    (let [rect (:rect (e/get-component system ball Rectangle))
           y (rectangle! rect :get-y)
           screen-height (graphics! :get-height)]
         (cond
@@ -21,17 +21,20 @@
 
 (defn- increment-score!
     "Increment the score for whichever player scored"
-    [player-scored]
+    [system player-scored]
     (let [type (if (= :player player-scored) PlayerScore CPUScore)
-          entity (first (e/get-all-entities-with-component type))]
-        (swap! (-> entity (e/get-component Score) :score) inc)))
+          entity (first (e/get-all-entities-with-component system type))]
+        (swap! (:score (e/get-component system entity Score)) inc))
+    system)
 
 (defn process-one-game-tick
     "Physics, process one game tick"
-    [system delta]
-    (doseq [ball (e/get-all-entities-with-component Ball)]
-        (when-let [player-scored (ball-has-scored ball)]
-            (println "SCORED!!!")
-            (increment-score! player-scored)
-            (b/destroy-ball)
-            (b/create-ball))))
+    [system _]
+    (reduce (fn [sys ball]
+                (if-let [player-scored (ball-has-scored system ball)]
+                    (-> sys
+                        (increment-score! player-scored)
+                        b/destroy-ball
+                        b/create-ball)
+                    sys))
+            system (e/get-all-entities-with-component system Ball)))

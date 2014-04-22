@@ -36,4 +36,5 @@
 (defn destroy-ball
     "Kills the ball! Oh No!"
     [system]
-    (reduce (fn [ball] (e/kill-entity system ball)) (e/get-all-entities-with-component system Ball) system))
+    (reduce (fn [sys ball] (e/kill-entity sys ball))
+            system (e/get-all-entities-with-component system Ball)))

@@ -58,7 +58,7 @@
     [system]
     (-> system
         (r/start)
-        ;(s/add-system-fn sc/process-one-game-tick)
+        (s/add-system-fn sc/process-one-game-tick)
         (s/add-system-fn i/process-one-game-tick)
         (s/add-system-fn ai/process-one-game-tick)
         (s/add-system-fn p/process-one-game-tick)
