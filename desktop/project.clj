@@ -1,13 +1,21 @@
 (defproject brute-play-pong "0.0.1-SNAPSHOT"
-    :description "A Pong Clone written with Brute Entity System and Play-CLJ"
-    :dependencies [[com.badlogicgames.gdx/gdx "0.9.9"]
-                   [com.badlogicgames.gdx/gdx-backend-lwjgl "0.9.9"]
-                   [com.badlogicgames.gdx/gdx-platform "0.9.9"
+    :description "FIXME: write description"
+
+    :dependencies [[com.badlogicgames.gdx/gdx "1.0.0"]
+                   [com.badlogicgames.gdx/gdx-backend-lwjgl "1.0.0"]
+                   [com.badlogicgames.gdx/gdx-box2d "1.0.0"]
+                   [com.badlogicgames.gdx/gdx-box2d-platform "1.0.0"
+                    :classifier "natives-desktop"]
+                   [com.badlogicgames.gdx/gdx-bullet "1.0.0"]
+                   [com.badlogicgames.gdx/gdx-bullet-platform "1.0.0"
+                    :classifier "natives-desktop"]
+                   [com.badlogicgames.gdx/gdx-platform "1.0.0"
                     :classifier "natives-desktop"]
                    [org.clojure/clojure "1.6.0"]
-                   [play-clj "0.2.4"]
+                   [play-clj "0.3.0"]
                    [brute "0.2.0-SNAPSHOT"]
                    [org.clojure/math.numeric-tower "0.0.4"]]
+
     :source-paths ["src" "src-common"]
     :javac-options ["-target" "1.6" "-source" "1.6" "-Xlint:-options"]
     :aot [brute-play-pong.core.desktop-launcher]
