@@ -13,7 +13,7 @@
                     :classifier "natives-desktop"]
                    [org.clojure/clojure "1.6.0"]
                    [play-clj "0.3.0"]
-                   [brute "0.2.0-SNAPSHOT"]
+                   [brute "0.2.0"]
                    [org.clojure/math.numeric-tower "0.0.4"]]
 
     :source-paths ["src" "src-common"]
