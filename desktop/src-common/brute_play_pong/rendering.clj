@@ -35,18 +35,18 @@
     "Render the scores"
     [system]
     (let [renderer (:renderer system)
-          sprite-batch (:sprite-batch renderer)
-          font (:font renderer)]
+          ^SpriteBatch sprite-batch (:sprite-batch renderer)
+          ^BitmapFont font (:font renderer)]
         (.begin sprite-batch)
         (doseq [entity (e/get-all-entities-with-component system Score)]
             (let [score (e/get-component system entity Score)
                   is-player (e/get-component system entity PlayerScore)
                   screen-width (graphics! :get-width)
                   screen-height (graphics! :get-height)
-                  str-score (str @(:score score))]
+                  ^CharSequence str-score (str @(:score score))]
                 (if is-player
-                    (.draw font sprite-batch str-score 15 30)
-                    (.draw font sprite-batch str-score (- screen-width 30) (- screen-height 15)))))
+                    (.draw font sprite-batch str-score 15.0 30.0)
+                    (.draw font sprite-batch str-score (float (- screen-width 30)) (float (- screen-height 15))))))
         (.end sprite-batch)))
 
 (defn process-one-game-tick
