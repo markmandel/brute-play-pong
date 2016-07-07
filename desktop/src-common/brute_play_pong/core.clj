@@ -10,8 +10,7 @@
               [brute-play-pong.scoring :as sc]
               [brute.entity :as e]
               [brute.system :as s]
-              [clojure.math.numeric-tower :as m])
-    (:import [brute_play_pong.component Rectangle Velocity]))
+              [clojure.math.numeric-tower :as m]))
 
 (def sys (atom 0))
 
