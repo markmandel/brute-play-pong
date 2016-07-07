@@ -25,3 +25,9 @@ lein run
 ## Building
 
 All projects can be built using [Nightcode](https://nightcode.info/), or on the command line using [Leiningen](https://github.com/technomancy/leiningen) with the [lein-droid](https://github.com/clojure-android/lein-droid) and [lein-fruit](https://github.com/oakes/lein-fruit) plugins.
+
+## License
+
+Copyright © 2016 Mark Mandel, Google Inc.
+
+Distributed under the Eclipse Public License either version 1.0 or (at your option) any later version.

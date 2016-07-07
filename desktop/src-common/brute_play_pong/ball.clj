@@ -5,7 +5,7 @@
     (:require [brute.entity :as e]
               [brute-play-pong.component :as c]
               [clojure.math.numeric-tower :as m])
-    (:import [brute_play_pong.component Ball Velocity]))
+    (:import [brute_play_pong.component Ball]))
 
 (defn- create-random-angle
     "Pick an angle, but anything close to 90 or 180 degress is totally out."
